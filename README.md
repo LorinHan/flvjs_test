@@ -81,7 +81,7 @@ export default {
     data () {
         return {
           id: "1",
-          rtsp: "rtsp://admin:dhlrw12345@192.168.0.101:554/h264/ch1/main/av_stream",
+          rtsp: "rtsp://admin:12345@192.168.0.101:554/h264/ch1/main/av_stream",
             player: null
         }
     },
