@@ -1,9 +1,12 @@
-### 1.确保rtsp流可连接
+### 实现摄像头的直播功能其实有许多方案，像是安装vlc插件、rtsp转rtmp然后使用videojs通过flash播放rtmp，以及hls .m3u8等方式
+### 然而现今的浏览器对于vlc插件几乎都不再支持了，flash在2020年也将被chrome停止支持，而.m3u8的方案用来做直播的话似乎延迟很高
+### 经过一番查找，最终决定使用B站（bilibili）开源的flvjs作为解决方案，其原理是后端用ffmpeg将rtsp视频流转换为flv，然后通过websocket传输flv视频流，然后前端通过websocket获取到视频流后，使用flvjs对视频流再一次处理并进行播放，这是一套无插件无flash免费的视频直播解决方案。
 ---
-### 2.后端环境：node express
-##### 2.1 安装第三方依赖
+# 1.使用vlc等工具测试，确保rtsp流可连接
+# 2.后端环境：node express
+### 2.1 安装第三方依赖
 `npm install express express-ws fluent-ffmpeg websocket-stream -S -D`
-##### 2.2 编写代码 index.js
+### 2.2 编写代码 index.js
 > 其中setFfmpegPath这里是指明了ffmpeg的安装路径，如果没有安装，请看第4点
 
 ```
@@ -59,11 +62,11 @@ function rtspRequestHandle(ws, req) {
 }
 localServer();
 ```
-##### 2.3 启动后端，node index.js
+### 2.3 启动后端，node index.js
 ---
-### 3.前端环境，采用vue
-##### 3.1 vue的搭建就不赘述了，构建好一个vue项目之后，npm install flv.js -S -D
-##### 3.2 编写代码
+# 3.前端环境，采用vue
+### 3.1 vue的搭建就不赘述了，构建好一个vue项目之后，npm install flv.js -S -D
+### 3.2 编写代码
 > video标签中的muted属性，是因为在视频流加载好之后，autoplay属性无法自动播放，加上这个属性后就可以实现了
 
 ```
@@ -127,9 +130,9 @@ export default {
 </style>
 ```
 ---
-### 4.到此为止，如果你有ffmpeg的环境，应该可以在前端看到画面了，如果没有ffmpeg的话请进行安装
-##### 4.1 访问官网[ffmpeg.zeranoe.com/builds/](https://ffmpeg.zeranoe.com/builds/)，根据操作系统自行选择安装
-##### 4.2 下载好后进行解压，在后端设置ffmpeg路径的代码中指向解压路径下的bin目录下的ffmpeg
+# 4.到此为止，如果你有ffmpeg的环境，应该可以在前端看到画面了，如果没有ffmpeg的话请进行安装
+### 4.1 访问官网[ffmpeg.zeranoe.com/builds/](https://ffmpeg.zeranoe.com/builds/)，根据操作系统自行选择安装
+### 4.2 下载好后进行解压，在后端设置ffmpeg路径的代码中指向解压路径下的bin目录下的ffmpeg
 ```
 var ffmpeg = require("fluent-ffmpeg");
 ffmpeg.setFfmpegPath("D:/ffmpeg-20191031-7c872df-win64-static/ffmpeg-20191031-7c872df-win64-static/bin/ffmpeg");
